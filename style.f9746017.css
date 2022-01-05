@@ -1,0 +1,2 @@
+img{display:block;max-width:100%}.gallery{display:flex;flex-wrap:wrap;margin:0 -20px -20px 0;padding:0 15px}.photo-card{flex-basis:calc(25% - 20px);margin-right:20px;margin-bottom:20px;transition:box-shadow .25s cubic-bezier(.4,0,.2,1)}.photo-card__image{width:400px;height:280px;object-fit:cover}.info{display:flex;border-left:1px solid #eee;border-bottom:1px solid #eee;border-right:1px solid #eee}.info-item{text-align:center}
+/*# sourceMappingURL=/goit-js-hw-11/style.f9746017.css.map */
