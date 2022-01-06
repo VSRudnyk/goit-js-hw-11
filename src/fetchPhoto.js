@@ -1,10 +1,11 @@
 const axios = require('axios');
 
-const BASE_URL = 'https://pixabay.com/api';
+const BASE_URL = 'https://pixabay.com/api/';
+const key = '25115953-d8d8be010bf370a8ff97eb4f1';
 
 async function getPhoto(text) {
   const searchParam = new URLSearchParams({
-    key: '25115953-d8d8be010bf370a8ff97eb4f1',
+    key: `${key}`,
     q: `${text}`,
     image_type: 'photo',
     orientation: 'horizontal',
