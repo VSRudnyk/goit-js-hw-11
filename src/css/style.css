@@ -14,7 +14,6 @@ input {
 }
 
 .form-container {
-  outline: 1px solid black;
   position: fixed;
   width: 100vw;
   height: 50px;
@@ -71,4 +70,17 @@ input {
 
 .info-item:not(:last-child) {
   margin-right: 15px;
+}
+
+.load-more-btn-container {
+  width: 100vw;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.load-more {
+  display: none;
 }

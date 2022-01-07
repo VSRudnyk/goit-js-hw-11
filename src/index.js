@@ -6,16 +6,26 @@ import simpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const refs = getRefs();
+let searchQuery = '';
 
-refs.searchPhotoCards.addEventListener('submit', onSubmit);
+refs.searchPhotoCards.addEventListener('submit', handleSubmit);
+refs.loadMoreBtn.addEventListener('click', onLoadMorePhoto);
 
-async function onSubmit(e) {
+function handleSubmit(e) {
   e.preventDefault();
   refs.cardContainer.innerHTML = '';
-  const searchQuery = e.target.elements.searchQuery.value;
+  searchQuery = e.target.elements.searchQuery.value;
+  fetchPhoto(searchQuery);
+}
 
+async function fetchPhoto(searchQuery) {
   const photoCards = await API.getPhoto(searchQuery);
   renderPhotoCards(photoCards);
+  disableBtnLoadMore();
+}
+
+function onLoadMorePhoto() {
+  fetchPhoto(searchQuery);
 }
 
 function renderPhotoCards(photo) {
@@ -27,10 +37,18 @@ function renderPhotoCards(photo) {
       );
     },
   );
+  runSimpleLightbox();
+}
+
+function runSimpleLightbox() {
   var lightbox = new SimpleLightbox('.gallery a', {
     captionsData: 'alt',
     captionPosition: 'bottom',
     captionDelay: 250,
     refresh: true,
   });
+}
+
+function disableBtnLoadMore() {
+  refs.loadMoreBtn.classList.remove('load-more');
 }
