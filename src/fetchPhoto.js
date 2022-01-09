@@ -12,7 +12,7 @@ async function getPhoto(inputText, pageParam) {
     safesearch: true,
   });
   try {
-    const response = await axios.get(`${BASE_URL}?${searchParam}&per_page=190&page=${pageParam}`);
+    const response = await axios.get(`${BASE_URL}?${searchParam}&per_page=40&page=${pageParam}`);
     return await response;
   } catch (error) {
     console.error(error);

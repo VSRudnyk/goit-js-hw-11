@@ -28,13 +28,19 @@ async function fetchPhoto(searchQuery, pageParam) {
     Notify.failure("We're sorry, but you've reached the end of search results.");
     refs.loadMoreBtn.setAttribute('disabled', 'disabled');
     return;
-  } else {
-    const photoCards = await API.getPhoto(searchQuery, pageParam);
-    totalHits += photoCards.data.hits.length;
-    Notify.info(`Hooray! We found ${photoCards.data.totalHits} images.`);
-    renderPhotoCards(photoCards);
-    removeBtnLoadMore();
   }
+
+  const photoCards = await API.getPhoto(searchQuery, pageParam);
+  if (photoCards.data.totalHits === 0) {
+    Notify.info('Sorry, there are no images matching your search query. Please try again.');
+    return;
+  }
+  totalHits += photoCards.data.hits.length;
+  Notify.info(`Hooray! We found ${photoCards.data.totalHits} images.`);
+
+  renderPhotoCards(photoCards);
+  bihaviorScroll();
+  removeBtnLoadMore();
 }
 
 function onLoadMorePhoto() {
@@ -68,4 +74,13 @@ function addBtnLoadMore() {
 
 function removeBtnLoadMore() {
   refs.loadMoreBtn.classList.remove('load-more');
+}
+
+function bihaviorScroll() {
+  const { height: cardHeight } = refs.cardContainer.firstElementChild.getBoundingClientRect();
+
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
 }
