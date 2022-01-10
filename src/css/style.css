@@ -54,7 +54,8 @@ input {
 
 .info {
   display: flex;
-
+  align-items: center;
+  justify-content: center;
   border-left: 1px solid #eee;
   border-bottom: 1px solid #eee;
   border-right: 1px solid #eee;
