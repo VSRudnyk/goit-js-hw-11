@@ -39,7 +39,7 @@ async function fetchPhoto(searchQuery, pageParam) {
   Notify.info(`Hooray! We found ${photoCards.data.totalHits} images.`);
 
   renderPhotoCards(photoCards);
-  bihaviorScroll();
+  // bihaviorScroll();
   removeBtnLoadMore();
 }
 
@@ -76,11 +76,11 @@ function removeBtnLoadMore() {
   refs.loadMoreBtn.classList.remove('load-more');
 }
 
-function bihaviorScroll() {
-  const { height: cardHeight } = refs.cardContainer.firstElementChild.getBoundingClientRect();
+// function bihaviorScroll() {
+//   const { height: cardHeight } = refs.cardContainer.firstElementChild.getBoundingClientRect();
 
-  window.scrollBy({
-    top: cardHeight * 2,
-    behavior: 'smooth',
-  });
-}
+//   window.scrollBy({
+//     top: cardHeight * 2,
+//     behavior: 'smooth',
+//   });
+// }
