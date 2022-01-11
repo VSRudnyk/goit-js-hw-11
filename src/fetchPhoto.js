@@ -10,7 +10,7 @@ export default class PhotoApiService {
     this.per_page = 40;
   }
 
-  async fetchArticles() {
+  async fetchPhoto() {
     const searchParams = new URLSearchParams({
       key: `${key}`,
       q: this.searchQuery,
@@ -31,6 +31,10 @@ export default class PhotoApiService {
 
   resetPage() {
     this.page = 1;
+  }
+
+  getPage() {
+    return this.page;
   }
 
   get query() {

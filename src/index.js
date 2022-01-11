@@ -5,51 +5,64 @@ import photoCardTpl from './templates/photo-cards.hbs';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-let totalPerPage = 0;
 const refs = getRefs();
 const photoApiService = new PhotoApiService();
 
 refs.searchForm.addEventListener('submit', onSearch);
+refs.loadMoreBtn.addEventListener('click', fetchPhoto);
 
 function onSearch(e) {
   e.preventDefault();
   photoApiService.query = e.currentTarget.elements.searchQuery.value;
-
-  if (photoApiService.query === '') {
-    return Notify.failure(
-      'Sorry, there are no images matching your search query. Please try again.',
-    );
-  }
+  refs.loadMoreBtn.disabled = false;
   photoApiService.resetPage();
-
-  fetchPhoto();
   clearPhotoCardContainer();
+  fetchPhoto();
 }
 
 async function fetchPhoto() {
   try {
-    const photoCards = await photoApiService.fetchArticles();
+    if (photoApiService.query === '') {
+      return Notify.failure('Please enter your request!');
+    }
+    const photoCards = await photoApiService.fetchPhoto();
     const {
       data: { hits, totalHits },
     } = photoCards;
-    totalPerPage += photoApiService.per_page;
-    console.log(totalPerPage);
+
     if (totalHits === 0) {
-      Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+      return Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.',
+      );
     }
-    if (totalPerPage >= totalHits) {
-      Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+
+    if (photoApiService.getPage() === 1) {
+      Notify.success(`Hooray! We found ${totalHits} images.`);
     }
     photoMarkup(hits);
     photoApiService.incrementPage();
   } catch (error) {
+    Notify.failure("We're sorry, but you've reached the end of search results.");
+    refs.loadMoreBtn.disabled = true;
     console.log(error.message);
   }
+
   simpleLightbox();
 }
 
 function photoMarkup(hits) {
   refs.cardContainer.insertAdjacentHTML('beforeend', photoCardTpl(hits));
+  refs.loadMoreBtn.classList.remove('load-more');
+  if (photoApiService.getPage() !== 1) {
+    const { height: cardHeight } = document
+      .querySelector('.gallery')
+      .firstElementChild.getBoundingClientRect();
+
+    window.scrollBy({
+      top: cardHeight * 2,
+      behavior: 'smooth',
+    });
+  }
 }
 
 function clearPhotoCardContainer() {
@@ -60,33 +73,3 @@ function simpleLightbox() {
   var lightbox = new SimpleLightbox('.gallery a', {});
   lightbox.refresh();
 }
-
-function checkPosition() {
-  // Нам потребуется знать высоту документа и высоту экрана.
-  const height = document.body.offsetHeight;
-  const screenHeight = window.innerHeight;
-
-  // Они могут отличаться: если на странице много контента,
-  // высота документа будет больше высоты экрана (отсюда и скролл).
-
-  // Записываем, сколько пикселей пользователь уже проскроллил.
-  const scrolled = window.scrollY;
-
-  // Обозначим порог, по приближении к которому
-  // будем вызывать какое-то действие.
-  // В нашем случае — четверть экрана до конца страницы.
-  const threshold = height - screenHeight / 4;
-
-  // Отслеживаем, где находится низ экрана относительно страницы.
-  const position = scrolled + screenHeight;
-
-  if (position >= threshold) {
-    // Если мы пересекли полосу-порог, вызываем нужное действие.
-    fetchPhoto();
-  }
-}
-
-(() => {
-  window.addEventListener('scroll', checkPosition);
-  window.addEventListener('resize', checkPosition);
-})();
