@@ -3,20 +3,41 @@ const axios = require('axios');
 const BASE_URL = 'https://pixabay.com/api/';
 const key = '25115953-d8d8be010bf370a8ff97eb4f1';
 
-async function getPhoto(inputText, pageParam) {
-  const searchParam = new URLSearchParams({
-    key: `${key}`,
-    q: `${inputText}`,
-    image_type: 'photo',
-    orientation: 'horizontal',
-    safesearch: true,
-  });
-  try {
-    const response = await axios.get(`${BASE_URL}?${searchParam}&per_page=40&page=${pageParam}`);
-    return await response;
-  } catch (error) {
-    console.error(error);
+export default class PhotoApiService {
+  constructor() {
+    this.searchQuery = '';
+    this.page = 1;
+    this.per_page = 40;
+  }
+
+  async fetchArticles() {
+    const searchParams = new URLSearchParams({
+      key: `${key}`,
+      q: this.searchQuery,
+      image_type: 'photo',
+      orientation: 'horizontal',
+      safesearch: true,
+      page: this.page,
+      per_page: this.per_page,
+    });
+    const url = `${BASE_URL}?${searchParams}`;
+
+    return await axios.get(url);
+  }
+
+  incrementPage() {
+    this.page += 1;
+  }
+
+  resetPage() {
+    this.page = 1;
+  }
+
+  get query() {
+    return this.searchQuery;
+  }
+
+  set query(newQuery) {
+    this.searchQuery = newQuery;
   }
 }
-
-export default { getPhoto };
