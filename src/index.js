@@ -9,7 +9,7 @@ const refs = getRefs();
 const photoApiService = new PhotoApiService();
 
 refs.searchForm.addEventListener('submit', onSearch);
-refs.loadMoreBtn.addEventListener('click', fetchPhoto);
+refs.loadMoreBtn.addEventListener('click', loadMore);
 
 function onSearch(e) {
   e.preventDefault();
@@ -53,16 +53,17 @@ async function fetchPhoto() {
 function photoMarkup(hits) {
   refs.cardContainer.insertAdjacentHTML('beforeend', photoCardTpl(hits));
   refs.loadMoreBtn.classList.remove('load-more');
-  if (photoApiService.getPage() !== 1) {
-    const { height: cardHeight } = document
-      .querySelector('.gallery')
-      .firstElementChild.getBoundingClientRect();
+}
 
-    window.scrollBy({
-      top: cardHeight * 2,
-      behavior: 'smooth',
-    });
-  }
+function loadMore() {
+  fetchPhoto();
+  const { height: cardHeight } = document
+    .querySelector('.gallery')
+    .firstElementChild.getBoundingClientRect();
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
 }
 
 function clearPhotoCardContainer() {
